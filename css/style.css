@@ -71,12 +71,14 @@ button:active {
     justify-content: center;
     align-items: center;
     margin-bottom: 11px;
+    width: 17%;
+    padding: 15px;
 }
 
 .post__title {
     color: #0053ba;
     font-family: sans-serif;
-    font-size: 30px;
+    font-size: 23px;
     line-height: 175%;
     text-align: center;
 }
@@ -101,3 +103,74 @@ button:active {
 .post_btn:focus {
     display: none;
 }
+
+/*Pagination
+========================================*/
+.post__quantity {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+}
+.post__btn-page {
+    margin: 0 5px;
+}
+
+.post__btn-page.active {
+    background-color: blueviolet;
+}
+
+.post__separator {
+    font-size: 30px;
+    color: #0069ed;
+}
+
+
+.post__btn-previous {
+    font-size: 0;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-top: 4px solid #0069ed;
+    border-right: 4px solid #0069ed;
+    margin-right: 15px;
+    transform: rotate(-135deg);
+    transition: all 0.2s;
+
+}
+
+.post__btn-previous:hover, .post__btn-previous:focus {
+    background: transparent;
+    transform: rotate(-135deg);
+    border-color: #0053ba;
+
+}
+
+.post__btn-next {
+   font-size: 0;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-top: 4px solid #0069ed;
+    border-right: 4px solid #0069ed;
+    transform: rotate(45deg);
+    margin-left: 15px;
+    transition: all 0.2s;
+}
+
+.post__btn-next:hover, .post__btn-next:focus {
+    background: transparent;
+    transform: rotate(45deg);
+    border-color: #0053ba;
+
+}
+
+
+
+
+
+
+
+/*========================================*/
