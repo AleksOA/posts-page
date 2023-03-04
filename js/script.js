@@ -48,7 +48,17 @@ function outputPosts() {
     let postWrapper = document.querySelector('.post__wrapper');
     let postItems = `<div class="post__items"></div>`;
     postWrapper.innerHTML += postItems;
-    newPage(mainSourceData(getUrlParameters()));
+    let variableData = {
+        'pageId': 1
+    }
+    if(mainSourceData(getUrlParameters()).options_userId == 'userId=null') {
+        newPage(mainSourceData(variableData));
+    }else{
+        newPage(mainSourceData(getUrlParameters()));
+    }
+    let buttonGetPosts = document.querySelector('.button-get-posts');
+    buttonGetPosts.remove();
+
 }
 // ============================
 
@@ -130,7 +140,7 @@ function pagination(quantityPosts, page){
         if(pageID == 1 ) {
 
             paginationBlock.innerHTML += btnPage(1);
-            for(let i=2; i< 4; i++){
+            for(let i=2; i< 6; i++){
                 paginationBlock.innerHTML += btnPage(i);
             }
             paginationBlock.innerHTML += separator;
@@ -149,6 +159,8 @@ function pagination(quantityPosts, page){
             paginationBlock.innerHTML += btnPage(pageID-1);
             paginationBlock.innerHTML += btnPage(pageID);
             paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += btnPage(pageID+2);
+            paginationBlock.innerHTML += btnPage(pageID+3);
             paginationBlock.innerHTML += separator;
             paginationBlock.innerHTML += btnPage(quantityPage);
             paginationBlock.innerHTML += btnNext;
@@ -164,6 +176,7 @@ function pagination(quantityPosts, page){
             paginationBlock.innerHTML += btnPage(pageID-1);
             paginationBlock.innerHTML += btnPage(pageID);
             paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += btnPage(pageID+2);
             paginationBlock.innerHTML += separator;
             paginationBlock.innerHTML += btnPage(quantityPage);
             paginationBlock.innerHTML += btnNext;
@@ -383,6 +396,8 @@ function getUrlParameters() {
 
 
 function mainSourceData(queryParametersFromBrowser) {
+    let idPageFromBrowser = queryParametersFromBrowser.pageId;
+
     let idPhotoFromBrowser = '';
     if(queryParametersFromBrowser.photoId == undefined){
         idPhotoFromBrowser = undefined;
@@ -403,7 +418,7 @@ function mainSourceData(queryParametersFromBrowser) {
     }
 
     let mainSourceData = {
-        'options_userId': `userId=${queryParametersFromBrowser.pageId}`,
+        'options_userId': `userId=${idPageFromBrowser}`,
         'options_photosId':
             {'forBrowser': idPhotoFromBrowser,
                 'forFetch': idPhotoFromFetch
@@ -413,6 +428,13 @@ function mainSourceData(queryParametersFromBrowser) {
                 'forFetch': idPostFromFetch
             }
     }
+    console.log(idPageFromBrowser);
+    console.log(idPhotoFromBrowser);
+    console.log(idPostFromBrowser);
+    console.log(mainSourceData);
+
+    // if(idPageFromBrowser == null && )
+
     updateURL(mainSourceData);
     return mainSourceData
 }
