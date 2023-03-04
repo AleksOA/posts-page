@@ -2,6 +2,7 @@
 
 
 createStartPage();
+const postWrapper = document.querySelector('.post__wrapper');
 function createStartPage() {
     const body = document.querySelector('body');
     body.innerHTML = `
@@ -9,7 +10,7 @@ function createStartPage() {
         <main>
             <div class="post__wrapper">
                 <div class="button-get-posts">
-                    <button id="buttonGetPost" >Gat post</button>
+                    <button id="buttonGetPost" >Get post</button>
                 </div>
             </div>
         </main>  
@@ -29,7 +30,6 @@ function createPost(data) {
     `;
     return divPost;
 }
-
 // ====================
 
 
@@ -37,12 +37,9 @@ function createPost(data) {
 
 // Get posts
 //===========================
-
 function getPosts(){
     outputPosts();
 }
-
-// btnGetPost.addEventListener('click', getPosts);
 //===========================
 
 // Output posts
@@ -55,6 +52,288 @@ function outputPosts() {
 }
 // ============================
 
+// Pagination
+// =======================================
+function pagination(quantityPosts, page){
+    let quantityPage = Math.ceil(quantityPosts / 10);
+    let pageID= page[0].userId
+    function btnPage(pageID){
+        let btnPage = `<button class="post__btn-page" id="btnPage${pageID}" data-page-id="${pageID}">${pageID}</button>`;
+        return btnPage
+    }
+
+    let paginationBlockElem = `<div class="post__quantity"></div>`;
+    postWrapper.innerHTML += paginationBlockElem;
+
+    let paginationBlock = document.querySelector('.post__quantity')
+
+
+    let separator = `<span class="post__separator"> . . . </span>`;
+    let btnPrevious = `
+        <span class="post__button-previous">
+            <button class="post__btn-previous" id="btnPrevious">Previous</button>            
+        </span>
+        `;
+    let btnNext = `
+        <span class="post__button-next">
+            <button class="post__btn-next" id="btnNext">Next</button>            
+        </span>
+        `;
+
+
+
+    if(quantityPage<7){
+        if(pageID == 1 ) {
+
+            paginationBlock.innerHTML += btnPage(1);
+            for(let i=2; i< 7; i++){
+                paginationBlock.innerHTML += btnPage(i);
+            }
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID >1 && pageID <6) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            for(let i=2; i< 7; i++){
+                paginationBlock.innerHTML += btnPage(i);
+            }
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID == 6 ) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            for(let i=2; i< 7; i++){
+                paginationBlock.innerHTML += btnPage(i);
+            }
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+    }
+
+    if(quantityPage>=7){
+        if(pageID == 1 ) {
+
+            paginationBlock.innerHTML += btnPage(1);
+            for(let i=2; i< 4; i++){
+                paginationBlock.innerHTML += btnPage(i);
+            }
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+
+        }
+
+        if(pageID == 2 ) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+        if(pageID == 3 ) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(pageID-2);
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+        if(pageID == 4 ) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(pageID-3);
+            paginationBlock.innerHTML += btnPage(pageID-2);
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID != 1 && pageID >4 && pageID < quantityPage-3 && pageID != quantityPage) {
+
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+        if(pageID == quantityPage-3) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += btnPage(pageID+2);
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID == quantityPage-2) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(pageID+1);
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID == quantityPage-1) {
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            paginationBlock.innerHTML += separator;
+            paginationBlock.innerHTML += btnPage(pageID-2);
+            paginationBlock.innerHTML += btnPage(pageID-1);
+            paginationBlock.innerHTML += btnPage(pageID);
+            paginationBlock.innerHTML += btnPage(quantityPage);
+            paginationBlock.innerHTML += btnNext;
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+
+        if(pageID == quantityPage) {
+
+            paginationBlock.innerHTML += btnPrevious;
+            paginationBlock.innerHTML += btnPage(1);
+            paginationBlock.innerHTML += separator;
+            for(let i=quantityPage-2; i<quantityPage; i++){
+                paginationBlock.innerHTML += btnPage(i);
+            }
+            paginationBlock.innerHTML += btnPage(quantityPage);
+
+            let currentPage= document.getElementById(`btnPage${pageID}`);
+            currentPage.classList.add('active');
+            btnsPrviousNext(currentPage,pageID,quantityPage);
+            buttonPage();
+        }
+    }
+
+
+    function btnsPrviousNext(data, pageID, quantityPage){
+        let currentPage = data;
+        if(pageID>1) {
+            let previousBtn = document.getElementById('btnPrevious');
+
+            previousBtn.addEventListener('click',() => {
+                let pageId = currentPage.getAttribute('data-page-id')-1;
+                let variableData = {
+                    'pageId': pageId
+                }
+                let allPost = document.querySelectorAll('.post');
+                allPost.forEach(post  => {
+                    post.remove();
+                });
+                paginationBlock.remove();
+                newPage(mainSourceData(variableData));
+            });
+        }
+
+        if(pageID<quantityPage) {
+            let nextBtn = document.getElementById('btnNext');
+
+            nextBtn.addEventListener('click',() => {
+                let pageId = Number(currentPage.getAttribute('data-page-id'))+1;
+                let variableData = {
+                    'pageId': pageId
+                }
+                let allPost = document.querySelectorAll('.post');
+                allPost.forEach(post  => {
+                    post.remove();
+                });
+                paginationBlock.remove();
+                newPage(mainSourceData(variableData));
+            });
+        }
+    }
+
+
+    function buttonPage() {
+        let btnPages = document.querySelectorAll('.post__btn-page');
+        btnPages.forEach(btnPage  => {
+            btnPage.addEventListener('click',() => {
+                let pageId = btnPage.getAttribute('data-page-id');
+                let variableData = {
+                    'pageId': pageId
+                }
+                let allPost = document.querySelectorAll('.post');
+                allPost.forEach(post  => {
+                    post.remove();
+                });
+                paginationBlock.remove();
+                newPage(mainSourceData(variableData));
+            });
+        })
+    }
+
+
+}
+
+// ============================================
 
 
 function updateURL(data) {
@@ -157,8 +436,10 @@ function newPage(data){
 
 
     Promise.all ([allPosts, page]).then(value => {
-        let allPosts = value[0];
         let page = value[1];
+        let quantityPosts = value[0].length;
+        pagination(quantityPosts, page);
+
 
         // display posts on the page
         let postItems = document.querySelector('.post__items');
