@@ -1,6 +1,4 @@
 
-
-
 createStartPage();
 const postWrapper = document.querySelector('.post__wrapper');
 function createStartPage() {
@@ -25,7 +23,7 @@ function createPost(data) {
    let divPost = `
         <div class="post">
             <h2 class="post__title">${data.title}</h2>
-            <button class="post_btn" data-post-id="${data.id}"></button>
+            <button class="post_btn" data-post-id="${data.id}" data-page-post="${data.userId}"></button>
         </div>   
     `;
     return divPost;
@@ -53,7 +51,14 @@ function outputPosts() {
     }
     if(mainSourceData(getUrlParameters()).options_userId == 'userId=null') {
         newPage(mainSourceData(variableData));
-    }else{
+    }
+    else if(mainSourceData(getUrlParameters()).options_userId != undefined &&
+            mainSourceData(getUrlParameters()).options_userId != undefined){
+        newPage(mainSourceData(getUrlParameters()));
+        popup(mainSourceData(getUrlParameters()), "browser");
+    }
+
+    else{
         newPage(mainSourceData(getUrlParameters()));
     }
     let buttonGetPosts = document.querySelector('.button-get-posts');
@@ -75,7 +80,7 @@ function pagination(quantityPosts, page){
     let paginationBlockElem = `<div class="post__quantity"></div>`;
     postWrapper.innerHTML += paginationBlockElem;
 
-    let paginationBlock = document.querySelector('.post__quantity')
+    let paginationBlock = document.querySelector('.post__quantity');
 
 
     let separator = `<span class="post__separator"> . . . </span>`;
@@ -88,9 +93,7 @@ function pagination(quantityPosts, page){
         <span class="post__button-next">
             <button class="post__btn-next" id="btnNext">Next</button>            
         </span>
-        `;
-
-
+       `;
 
     if(quantityPage<7){
         if(pageID == 1 ) {
@@ -343,7 +346,6 @@ function pagination(quantityPosts, page){
         })
     }
 
-
 }
 
 // ============================================
@@ -426,18 +428,14 @@ function mainSourceData(queryParametersFromBrowser) {
         'options_postId':
             {'forBrowser': idPostFromBrowser,
                 'forFetch': idPostFromFetch
-            }
+            },
+        'browser': queryParametersFromBrowser
     }
-    console.log(idPageFromBrowser);
-    console.log(idPhotoFromBrowser);
-    console.log(idPostFromBrowser);
-    console.log(mainSourceData);
-
-    // if(idPageFromBrowser == null && )
-
     updateURL(mainSourceData);
     return mainSourceData
 }
+
+
 
 function newPage(data){
     updateURL(data);
@@ -468,9 +466,108 @@ function newPage(data){
         page.forEach(post => {
             postItems.innerHTML += createPost(post);
         });
+        postMore();
 
     });
 
+}
+
+function postMore(){
+    let postsBtn = document.querySelectorAll('.post_btn');
+    postsBtn.forEach(postBtn => {
+        postBtn.addEventListener('click', popup);
+    })
+}
+
+function popup(main_source_data, source) {
+    let postID = '';
+    let pageID = '';
+    let photoID = '';
+    if(source == 'browser') {
+        postID = mainSourceData(getUrlParameters()).browser.postId;
+        pageID  = mainSourceData(getUrlParameters()).browser.pageId;
+        photoID = mainSourceData(getUrlParameters()).browser.photoId;
+    }else {
+        postID = this.getAttribute('data-post-id');
+        pageID = this.getAttribute('data-page-post');
+        photoID = postID;
+    }
+
+    if(postID > 50) {
+        photoID = postID-50;
+    }
+
+    let variableData = {
+        'pageId': pageID,
+        'photoId': photoID,
+        'postId': postID
+    }
+
+    let currentData = mainSourceData(variableData);
+    let post = new Promise((resolve, reject) => {
+        fetch('https://jsonplaceholder.typicode.com/posts' + `?${currentData.options_postId.forFetch}`)
+            .then((response) => {
+                resolve(response.json());
+            })
+    });
+
+    let photo = new Promise((resolve, reject) => {
+        fetch('https://jsonplaceholder.typicode.com/albums/1/photos' + `?${currentData.options_photosId.forFetch}`)
+            .then((response) => {
+                resolve(response.json());
+            })
+    });
+
+    Promise.all ([post, photo]).then(value => {
+        displayPopupContent(value);
+        });
+
+    function displayPopupContent(content) {
+        let title = content[0][0].title;
+        let description = content[0][0].body;
+        let urlImg = content[1][0].url;
+        let popupHTML= `
+                <div class="popup">
+                    <div class="popup__body">
+                        <div class="popup__content-box">
+                            <span class="popup__button-close">
+                                <button class="popup__btn-close"></button>
+                            </span>
+                            <div class="popup__content-box-inner">
+                                <div class="popup__content">
+                                    <h2 class="popup__content-title">${title}</h2>
+                                    <div class="popup__content-image">
+                                        <img class="popup__content-img" src="${urlImg}" alt="Plesholder">
+                                    </div>
+                                    <p class="popup_content-description">${description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        postWrapper.innerHTML += popupHTML;
+
+        let btnClose = document.querySelector('.popup__btn-close');
+        btnClose.addEventListener('click', closePopup);
+
+        function closePopup() {
+            let pageID = content[0][0].userId;
+            let popups = document.querySelector('.popup');
+            popups.remove();
+            let variableData = {
+                'pageId': pageID
+            }
+            let paginationBlock = document.querySelector('.post__quantity');
+            let posts = document.querySelectorAll('.post');
+            posts.forEach(post =>{
+                post.remove();
+            })
+            paginationBlock.remove();
+            newPage(mainSourceData(variableData));
+
+        }
+    }
 }
 
 
