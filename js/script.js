@@ -467,7 +467,6 @@ function newPage(data){
             postItems.innerHTML += createPost(post);
         });
         postMore();
-
     });
 
 }
@@ -549,7 +548,15 @@ function popup(main_source_data, source) {
         postWrapper.innerHTML += popupHTML;
 
         let btnClose = document.querySelector('.popup__btn-close');
+        let popup = document.querySelector('.popup');
         btnClose.addEventListener('click', closePopup);
+        popup.addEventListener('click', close);
+
+        function close(event){
+            if(!event.target.closest('.popup__content-box')){
+                closePopup();
+            }
+        }
 
         function closePopup() {
             let pageID = content[0][0].userId;
