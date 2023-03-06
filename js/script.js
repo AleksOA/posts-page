@@ -36,6 +36,7 @@ function createPost(data) {
 // Get posts
 //===========================
 function getPosts(){
+    preloader();
     outputPosts();
 }
 //===========================
@@ -76,10 +77,8 @@ function pagination(quantityPosts, page){
         let btnPage = `<button class="post__btn-page" id="btnPage${pageID}" data-page-id="${pageID}">${pageID}</button>`;
         return btnPage
     }
-
     let paginationBlockElem = `<div class="post__quantity"></div>`;
     postWrapper.innerHTML += paginationBlockElem;
-
     let paginationBlock = document.querySelector('.post__quantity');
 
 
@@ -436,9 +435,11 @@ function mainSourceData(queryParametersFromBrowser) {
 }
 
 
-
+// ===================================================================================
 function newPage(data){
     updateURL(data);
+    let preloaderElem = document.querySelector('.preloader');
+    preloaderElem.classList.remove('hidden');
 
     let allPosts = new Promise((resolve, reject) => {
         fetch('https://jsonplaceholder.typicode.com/posts')
@@ -460,13 +461,15 @@ function newPage(data){
         let quantityPosts = value[0].length;
         pagination(quantityPosts, page);
 
-
         // display posts on the page
         let postItems = document.querySelector('.post__items');
         page.forEach(post => {
             postItems.innerHTML += createPost(post);
         });
         postMore();
+        let preloaderElem = document.querySelector('.preloader');
+        preloaderElem.classList.add('hidden');
+
     });
 
 }
@@ -478,6 +481,8 @@ function postMore(){
     })
 }
 
+
+// =============================================================================================
 function popup(main_source_data, source) {
     let postID = '';
     let pageID = '';
@@ -503,6 +508,8 @@ function popup(main_source_data, source) {
     }
 
     let currentData = mainSourceData(variableData);
+    let preloaderElem = document.querySelector('.preloader');
+    preloaderElem.classList.remove('hidden');
     let post = new Promise((resolve, reject) => {
         fetch('https://jsonplaceholder.typicode.com/posts' + `?${currentData.options_postId.forFetch}`)
             .then((response) => {
@@ -519,6 +526,8 @@ function popup(main_source_data, source) {
 
     Promise.all ([post, photo]).then(value => {
         displayPopupContent(value);
+        let preloaderElem = document.querySelector('.preloader');
+        preloaderElem.classList.add('hidden');
         });
 
     function displayPopupContent(content) {
@@ -577,52 +586,19 @@ function popup(main_source_data, source) {
     }
 }
 
-
-
-
-// ================================================================================================================
-
-function newPostsPage(data) {
-    updateURL(data);
-    fetch('https://jsonplaceholder.typicode.com/posts')
-        .then((response) => response.json())
-        .then((json) => console.log(json));
-
-
-    fetch('https://jsonplaceholder.typicode.com/posts' + `?${data.options_userId}`)
-        .then((response) => response.json())
-        .then((json) => console.log(json));
-
-
-    if(data.options_photosId.forFetch != undefined) {
-        fetch('https://jsonplaceholder.typicode.com/albums/1/photos' + `?${data.options_photosId.forFetch}`)
-            .then((response) => response.json())
-            .then((json) => console.log(json));
-    }
-
-    if(data.options_postId.forFetch != undefined) {
-        fetch('https://jsonplaceholder.typicode.com/posts' + `?${data.options_postId.forFetch}`)
-            .then((response) => response.json())
-            .then((json) => console.log(json));
-    }
+// ======================================================================
+function preloader() {
+    let reloaderHTML = `
+        <div class="preloader">
+            <div class="preloader__box">
+                <div class="loadingio-spinner-rolling-1g36vz7y75o">
+                    <div class="ldio-x5ke32m4668">
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    postWrapper.innerHTML += reloaderHTML;
 }
-
-
-// output data from URL same had enter browser````
-
-// ================
-// newPostsPage(mainSourceData(getUrlParameters()));
-//=================
-
-
-
-let variableData = {
-    'pageId': 7,
-    'photoId': 5,
-    'postId': 5
-
-}
-
-// newPostsPage(mainSourceData(variableData));
-
 
