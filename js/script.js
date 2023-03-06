@@ -52,14 +52,11 @@ function outputPosts() {
     }
     if(mainSourceData(getUrlParameters()).options_userId == 'userId=null') {
         newPage(mainSourceData(variableData));
-    }
-    else if(mainSourceData(getUrlParameters()).options_userId != undefined &&
-            mainSourceData(getUrlParameters()).options_userId != undefined){
+    } else if(mainSourceData(getUrlParameters()).options_photosId.forBrowser != undefined &&
+            mainSourceData(getUrlParameters()).options_postId.forBrowser != undefined){
         newPage(mainSourceData(getUrlParameters()));
         popup(mainSourceData(getUrlParameters()), "browser");
-    }
-
-    else{
+    } else{
         newPage(mainSourceData(getUrlParameters()));
     }
     let buttonGetPosts = document.querySelector('.button-get-posts');
