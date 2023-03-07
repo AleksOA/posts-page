@@ -373,7 +373,6 @@ function updateURL(data) {
     }
 }
 
-
 // Get URL Parameters
 //============================
 
@@ -390,8 +389,9 @@ function getUrlParameters() {
     }
     return queryParametersFromBrowser
 }
-//============================
-
+//===========================
+//
+// =
 
 function mainSourceData(queryParametersFromBrowser) {
     let idPageFromBrowser = queryParametersFromBrowser.pageId;
@@ -555,6 +555,8 @@ function popup(main_source_data, source) {
 
         let btnClose = document.querySelector('.popup__btn-close');
         let popup = document.querySelector('.popup');
+        let body = document.querySelector('body');
+        body.classList.add('modal-open');
         btnClose.addEventListener('click', closePopup);
         popup.addEventListener('click', close);
 
@@ -576,6 +578,7 @@ function popup(main_source_data, source) {
             posts.forEach(post =>{
                 post.remove();
             })
+            body.classList.remove('modal-open');
             paginationBlock.remove();
             newPage(mainSourceData(variableData));
 
